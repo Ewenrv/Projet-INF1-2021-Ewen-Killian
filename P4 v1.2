@@ -182,21 +182,16 @@ public class projet {
         return c;
     }
     
-    public static void jouerCoup(int joueur) {
-    	int colonne = 0;
-    			colonne = colonneJoué();
-    			jouer(joueur, colonne);
-    	joueur = joueur - 3;
-    }
-    
     
     public static void main (String[] args) {
     	int joueur = 1;
+    	int colonne = 0;
     	while(!aGagne(joueur) || !matchNul()) {
-    		jouerCoup(joueur);
+    		colonne = colonneJoué();
+    		jouer(joueur, colonne);
     		joueur = 3 - joueur;
     	}
-    	System.out.print("Le joueur numéro " + joueur + "à gagné la partie de jeu6");
+    	System.out.print("Le joueur numéro " + joueur + " à gagné la partie de jeu");
     }
     
 }
