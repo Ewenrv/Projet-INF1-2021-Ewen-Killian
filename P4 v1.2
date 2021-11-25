@@ -178,26 +178,25 @@ public class projet {
         System.out.print("\n");
         System.out.print("Quel coup pour le joueur...?");
         Scanner scanner = new Scanner(System.in);
-        int c = scanner.nextInt();
-        scanner.close();	
+        int c = scanner.nextInt();	
         return c;
     }
     
-    public static void changeJoueur(int joueur) {
-    	if (joueur == 1) {
-    		joueur++;
-    	}
-    	else {
-    		joueur--;
-    	}
+    public static void jouerCoup(int joueur) {
+    	int colonne = 0;
+    			colonne = colonneJoué();
+    			jouer(joueur, colonne);
+    	joueur = joueur - 3;
     }
     
     
     public static void main (String[] args) {
     	int joueur = 1;
-    	int colonne = 0;
-    			colonne = colonneJoué();
-    			jouer(joueur, colonne);
-    		}
+    	while(!aGagne(joueur) || !matchNul()) {
+    		jouerCoup(joueur);
+    		joueur = 3 - joueur;
+    	}
+    	System.out.print("Le joueur numéro " + joueur + "à gagné la partie de jeu6");
+    }
     
 }
