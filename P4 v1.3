@@ -15,17 +15,18 @@ public class projet {
         }
     }
     
-//chercher dans la colonne correspondante dans grille, la premiere case contenant un 0 et de changer cette valeur en le numero du joueur
+//chercher dans la colonne correspondante dans grille, la premiere case contenant la valeur "0"
+//puis de changer cette valeur en la valeur du joueur
     public static void jouer (int joueur, int colonne) {
         boolean vide = false;
-        while(!vide) {
+        while(!vide) { //jusqu'à ce qu'on trouve une case vide
         for (int i=0; i<grille.length; i++) {
-            if (!vide && grille[i][colonne] == 0) { //Si la valeur est égale a 0 et que la case est la première vide alors
-            grille[i][colonne] = joueur; // la valeur de cette case devient la case du joueur
-            vide = true; //donc la première case vide ne le sera plus
+            if (!vide && grille[i][colonne] == 0) { 
+            grille[i][colonne] = joueur; 
+            vide = true;
             }
         }
-        if(!vide) {
+        if(!vide) { //si l'on a pas trouvé de case vide dans cette colonne, on redemande un colonne à l'utilisateur
         System.out.println("La colonne est pleine, choisissez en une autre");
         Scanner sc = new Scanner(System.in);
         colonne = sc.nextInt();
@@ -36,7 +37,7 @@ public class projet {
     //affiche la Grille de jeu
     public static void afficheGrille () {
         for (int i = 0; i < grille.length; i++) {
-            System.out.print("|"); //affiche | avant chaque ligne
+            System.out.print("|"); //affiche | avant chaque case
                 for (int j=0; j<grille[0].length; j++) { //lis par ligne
                     if (grille[5-i][j] == 2) { //Si c'est une valeur du joueur 2 on affiche 0
                         System.out.print("O");
@@ -47,49 +48,50 @@ public class projet {
                     else { //Si c'est une autre valeur (0) on affiche un espace
                         System.out.print(" ");
                     }
-                    System.out.print("|"); //affiche | après chaque ligne
+                    System.out.print("|"); //affiche | après chaque case
                 }
                 System.out.print("\n");
         }
-        System.out.print(" 0 1 2 3 4 5 6");
+        System.out.print(" 0 1 2 3 4 5 6"); //On affiche le numéro des colonnes
         
     }
     
-    //Verification si gagnant (aGagne...)
+    //Verifie si le joueur à gagné en position horizontale
     public static boolean aGagneHor(int y, int x, int joueur) {
-    	if (joueur != grille[y][x]) return false;
+    	if (joueur != grille[y][x]) return false; //si la case que l'on verifie ne contient pas un jeton du joueur, il n'y aura pas de ligne
         boolean FinDroite = false;
         boolean FinGauche = false;
-        int cpt = 0; //compteur de cases d'affilé avec une pièce valide
-        for (int i = 1; i<=3; i++) { //on verifie 3 pièce max autour de la piece placer
-            if ( x+i <= 6) { //On ne verfie pas plus loin que la 6ème ligne, la limite de largeur étant 7
-                if (!FinDroite && grille[y][x+i] == joueur) { //Si l'on a pas atteind la limite et que la piece a la droite est la même que celle du joueur
-                    cpt++; //le compteur de piece augmente
+        int cpt = 0; //compteur de cases d'affilé avec le jeton du joueur
+        for (int i = 1; i<=3; i++) { //on verifie 3 pièce autour du jeton max
+            if ( x+i <= 6) { //On ne verfie pas plus loin que la 6ème ligne
+                if (!FinDroite && grille[y][x+i] == joueur) { //Si le jeton de droite est similaire à celui du joueur...
+                    cpt++; //le compteur de jeton augmente
                 }
                 else {
                     FinDroite = true; //sinon on notifie qu'on a atteinds la limite
                 }
             }
-            if (x-i >= 0) {
+            if (x-i >= 0) { //on verifie alors a gauche du 1er jeton
                 if (!FinGauche && grille[y][x-i] == joueur) {
-                    cpt++;
+                    cpt++; //on utilise toujours le même compteur
                 }
                 else {
                     FinGauche = true;
             }
                 }
         }
-        return cpt == 3; 
+        return cpt == 3; //si le compteur est égal à 3, on a une ligne complète
     }
     
+    //Verifie si le joueur à gagné en position verticale
     public static boolean aGagneVer(int y, int x, int joueur) {
     	if (joueur != grille[y][x]) return false;
         boolean FinHaut = false;
         boolean FinBas = false;
-        int cpt = 0; //compteur de cases d'affilé avec une pièce valide
-        for (int i = 1; i<=3; i++) { //on verifie 3 pièce max autour de la piece placer
-            if (y+i <= 5) { //On ne verfie pas plus loin que la 5ème colonne, la limite de hauteur étant 6
-                if (!FinHaut && grille[y+i][x] == joueur) {
+        int cpt = 0;
+        for (int i = 1; i<=3; i++) {
+            if (y+i <= 5) {
+                if (!FinHaut && grille[y+i][x] == joueur) { // On augmente le y à la place du i (par rapport à l'horizontale)
                     cpt++;
                 }
                 else {
@@ -97,7 +99,7 @@ public class projet {
                 }
             }
             if (y-i >=0) {
-                if (!FinBas && grille[y-i][x] == joueur) {
+                if (!FinBas && grille[y-i][x] == joueur) { // On décrémente le y à la place du i (par rapport à l'horizontale)
                     cpt++;
                 }
                 else {
@@ -107,22 +109,23 @@ public class projet {
         } return cpt == 3;
     }
     
+    //Verifie si le joueur à gagné en position Diagonale montante
     public static boolean aGagneDiagMont(int y, int x, int joueur) {
     	if (joueur != grille[y][x]) return false;
         boolean FinHaut = false;
         boolean FinBas = false;
         int cpt = 0;
         for (int i = 1; i<=3; i++) {
-            if (y-i >= 0 && x+i <= 6) {
-                if (!FinHaut && grille[y-i][x+i] == joueur) {
+            if (y-i >= 0 && x+i <= 6) { //on doit verifier sur les 2 axes si l'on est pas out of bounds
+                if (!FinHaut && grille[y-i][x+i] == joueur) { //car l'on augmente ou décrémente sur les 2 axes
                 	cpt++;
                 }
                 else {
                     FinHaut = true;
                 }
             }
-            if (y+i <= 5 && x-i >= 0) {
-                if (!FinBas && grille[y+i][x-i] == joueur) {
+            if (y+i <= 5 && x-i >= 0) { //on doit verifier sur les 2 axes si l'on est pas OOB
+                if (!FinBas && grille[y+i][x-i] == joueur) { //car l'on augmente ou décrémente sur les 2 axes
                     cpt++;
                 }
                 else {
@@ -132,6 +135,7 @@ public class projet {
         } return cpt == 3;
     }
     
+    //Verifie si le joueur à gagné en position Diagonale descendante, très similaire à la diagonale montante
     public static boolean aGagneDiagDesc(int y, int x, int joueur) {
     	if (joueur != grille[y][x]) return false;
         boolean FinHaut = false;
@@ -157,6 +161,7 @@ public class projet {
         } return cpt == 3;
     }
     
+    //Verifie si un joueur à gagné sur n'importe quel axe
     public static boolean aGagne (int joueur) {
     	boolean gagne = false;
     	for(int y=0; y< grille.length;y++) {
@@ -194,9 +199,9 @@ public class projet {
     	int joueur = 1;
     	int colonne = 0;
     	while(!aGagne(3-joueur) || !matchNul()) {
-    		colonne = colonneJoué(joueur);
+    			colonne = colonneJoué(joueur);
     		jouer(joueur, colonne);
-    		joueur = 3 - joueur;
+    		joueur = 3 -joueur;
     	}
     	if (!matchNul()) System.out.print("Match nul");
     	else {
