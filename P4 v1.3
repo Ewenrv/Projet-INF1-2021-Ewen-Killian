@@ -193,13 +193,18 @@ public class projet {
     	initialiseGrille();
     	int joueur = 1;
     	int colonne = 0;
-    	while(!aGagne(joueur) || !matchNul()) {
+    	while(!aGagne(3-joueur) || !matchNul()) {
     		colonne = colonneJoué(joueur);
     		jouer(joueur, colonne);
     		joueur = 3 - joueur;
     	}
     	if (!matchNul()) System.out.print("Match nul");
-    	else System.out.print("Le joueur numéro " + joueur + " à gagné la partie de jeu");
+    	else {
+    		int joueurGagnant = 3 - joueur;
+    		afficheGrille();
+    		System.out.print("\n");
+    		System.out.print("Le joueur numéro " + joueurGagnant + " à gagné la partie de jeu");
+    	}
     }
     
     //IA
