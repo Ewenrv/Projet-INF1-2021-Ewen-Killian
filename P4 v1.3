@@ -1,0 +1,217 @@
+package puissance4;
+import java.util.Scanner;
+import java.util.Random;
+
+public class projet {
+														// x=6
+    public static int[][] grille = new int[6][7];
+    
+    
+    public static void initialiseGrille() { //met toutes les valeurs de la grille de jeu à 0 
+        for(int i=0 ; i<grille.length ; i++) {
+            for(int j=0 ; j<grille[0].length ; j++) {
+                grille[i][j] = 0;
+            }
+        }
+    }
+    
+//chercher dans la colonne correspondante dans grille, la premiere case contenant un 0 et de changer cette valeur en le numero du joueur
+    public static void jouer (int joueur, int colonne) {
+        boolean vide = false;
+        while(!vide) {
+        for (int i=0; i<grille.length; i++) {
+            if (!vide && grille[i][colonne] == 0) { //Si la valeur est égale a 0 et que la case est la première vide alors
+            grille[i][colonne] = joueur; // la valeur de cette case devient la case du joueur
+            vide = true; //donc la première case vide ne le sera plus
+            }
+        }
+        if(!vide) {
+        System.out.println("La colonne est pleine, choisissez en une autre");
+        Scanner sc = new Scanner(System.in);
+        colonne = sc.nextInt();
+        }
+        }
+    }
+    
+    //affiche la Grille de jeu
+    public static void afficheGrille () {
+        for (int i = 0; i < grille.length; i++) {
+            System.out.print("|"); //affiche | avant chaque ligne
+                for (int j=0; j<grille[0].length; j++) { //lis par ligne
+                    if (grille[5-i][j] == 2) { //Si c'est une valeur du joueur 2 on affiche 0
+                        System.out.print("O");
+                    }
+                    else if (grille[5-i][j] == 1) { //Si c'est une valeur du joueur 1 on affiche X
+                        System.out.print("X");
+                    }
+                    else { //Si c'est une autre valeur (0) on affiche un espace
+                        System.out.print(" ");
+                    }
+                    System.out.print("|"); //affiche | après chaque ligne
+                }
+                System.out.print("\n");
+        }
+        System.out.print(" 0 1 2 3 4 5 6");
+        
+    }
+    
+    //Verification si gagnant (aGagne...)
+    public static boolean aGagneHor(int y, int x, int joueur) {
+    	if (joueur != grille[y][x]) return false;
+        boolean FinDroite = false;
+        boolean FinGauche = false;
+        int cpt = 0; //compteur de cases d'affilé avec une pièce valide
+        for (int i = 1; i<=3; i++) { //on verifie 3 pièce max autour de la piece placer
+            if ( x+i <= 6) { //On ne verfie pas plus loin que la 6ème ligne, la limite de largeur étant 7
+                if (!FinDroite && grille[y][x+i] == joueur) { //Si l'on a pas atteind la limite et que la piece a la droite est la même que celle du joueur
+                    cpt++; //le compteur de piece augmente
+                }
+                else {
+                    FinDroite = true; //sinon on notifie qu'on a atteinds la limite
+                }
+            }
+            if (x-i >= 0) {
+                if (!FinGauche && grille[y][x-i] == joueur) {
+                    cpt++;
+                }
+                else {
+                    FinGauche = true;
+            }
+                }
+        }
+        return cpt == 3; 
+    }
+    
+    public static boolean aGagneVer(int y, int x, int joueur) {
+    	if (joueur != grille[y][x]) return false;
+        boolean FinHaut = false;
+        boolean FinBas = false;
+        int cpt = 0; //compteur de cases d'affilé avec une pièce valide
+        for (int i = 1; i<=3; i++) { //on verifie 3 pièce max autour de la piece placer
+            if (y+i <= 5) { //On ne verfie pas plus loin que la 5ème colonne, la limite de hauteur étant 6
+                if (!FinHaut && grille[y+i][x] == joueur) {
+                    cpt++;
+                }
+                else {
+                    FinHaut = true;
+                }
+            }
+            if (y-i >=0) {
+                if (!FinBas && grille[y-i][x] == joueur) {
+                    cpt++;
+                }
+                else {
+                    FinBas = true;
+            }
+                }
+        } return cpt == 3;
+    }
+    
+    public static boolean aGagneDiagMont(int y, int x, int joueur) {
+    	if (joueur != grille[y][x]) return false;
+        boolean FinHaut = false;
+        boolean FinBas = false;
+        int cpt = 0;
+        for (int i = 1; i<=3; i++) {
+            if (y-i >= 0 && x+i <= 6) {
+                if (!FinHaut && grille[y-i][x+i] == joueur) {
+                	cpt++;
+                }
+                else {
+                    FinHaut = true;
+                }
+            }
+            if (y+i <= 5 && x-i >= 0) {
+                if (!FinBas && grille[y+i][x-i] == joueur) {
+                    cpt++;
+                }
+                else {
+                    FinBas = true;
+            }
+                }
+        } return cpt == 3;
+    }
+    
+    public static boolean aGagneDiagDesc(int y, int x, int joueur) {
+    	if (joueur != grille[y][x]) return false;
+        boolean FinHaut = false;
+        boolean FinBas = false;
+        int cpt = 0;
+        for (int i = 1; i<=3; i++) {
+            if (y+i <= 5 && x+i <= 6) {
+                if (!FinBas && grille[y+i][x+i] == joueur) {
+                	cpt++;
+                }
+                else {
+                    FinBas = true;
+                }
+            }
+            if (y-i >= 0 && x-i >= 0) {
+                if (!FinHaut && grille[y-i][x-i] == joueur) {
+                    cpt++;
+                }
+                else {
+                    FinHaut = true;
+            }
+                }
+        } return cpt == 3;
+    }
+    
+    public static boolean aGagne (int joueur) {
+    	boolean gagne = false;
+    	for(int y=0; y< grille.length;y++) {
+    		for(int x=0; x< grille[y].length;x++) {
+    			if(!gagne && aGagneHor(y ,x, joueur) || aGagneVer(y ,x, joueur) || aGagneDiagMont(y ,x, joueur) || aGagneDiagDesc(y ,x, joueur)) {
+    				gagne = true;
+    			}
+    		}
+    	} return gagne;
+    }
+    
+    public static boolean matchNul () {
+    	boolean plein = false;
+    	for(int y=0; y< grille.length;y++) {
+    		for(int x=0; x< grille[y].length;x++) {
+    			if(!plein && grille[y][x] == 0) {
+    				plein = true;
+    			}
+    		}
+    	} return plein;
+    }
+ 
+    
+    public static int colonneJoué (int joueur) {
+    	afficheGrille();
+        System.out.print("\n");
+        System.out.print("Quel coup pour le joueur " + joueur + " ?");
+        Scanner scanner = new Scanner(System.in);
+        int c = scanner.nextInt();	
+        return c;
+    }
+    
+    public static void jeu () {
+    	initialiseGrille();
+    	int joueur = 1;
+    	int colonne = 0;
+    	while(!aGagne(joueur) || !matchNul()) {
+    		colonne = colonneJoué(joueur);
+    		jouer(joueur, colonne);
+    		joueur = 3 - joueur;
+    	}
+    	if (!matchNul()) System.out.print("Match nul");
+    	else System.out.print("Le joueur numéro " + joueur + " à gagné la partie de jeu");
+    }
+    
+    //IA
+    public static void joueCoupRandom () {
+    	Random random = new Random();
+        int colonne = random.nextInt(7);
+        jouer(2, colonne);
+    }
+    
+    
+    public static void main (String[] args) {
+    	jeu();
+    }
+    
+}
