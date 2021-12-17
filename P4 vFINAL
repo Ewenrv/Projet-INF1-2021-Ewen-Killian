@@ -314,10 +314,15 @@ public class projet {
     
     //TROUVE QUELLE COLONNE JOUER POUR BLOQUER L'ADVERSAIRE DE L'IA NIVEAU 3
     public static int Empeche () {
+    	boolean boucle = false;
     	for(int i=0; i<grille.length; i ++) {
+    		while(!boucle) {
+    			boucle = true;
+    		}
     		int vide = TrouveCaseVide(i);
     		if(vide == -2) {
     			i++;
+    			boucle = false;
     		}
     		else {
     		grille[vide][i] = 1;
